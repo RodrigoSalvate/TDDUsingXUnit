@@ -1,4 +1,5 @@
-﻿using ExpectedObjects;
+﻿using CursoOnline.DomainTest._Util;
+using ExpectedObjects;
 using System;
 using Xunit;
 
@@ -40,10 +41,8 @@ namespace CursoOnline.DomainTest.Courses
             };
 
             //Assert
-            var message = Assert.Throws<ArgumentException>(() =>
-                new Courses(nomeInvalido, expectedCourse.CourseLoad, expectedCourse.TargetAudience, expectedCourse.Value)).Message;
-
-            Assert.Equal("Invalid Name", message);
+            Assert.Throws<ArgumentException>(() =>
+                new Courses(nomeInvalido, expectedCourse.CourseLoad, expectedCourse.TargetAudience, expectedCourse.Value)).WithMessage("Invalid Name");
         }
 
         [Theory]
@@ -62,10 +61,8 @@ namespace CursoOnline.DomainTest.Courses
             };
 
             //Assert
-            var message = Assert.Throws<ArgumentException>(() =>
-                new Courses(expectedCourse.Name, courseLoadInvalid, expectedCourse.TargetAudience, expectedCourse.Value)).Message;
-
-            Assert.Equal("Invalid CourseLoad", message);
+            Assert.Throws<ArgumentException>(() =>
+               new Courses(expectedCourse.Name, courseLoadInvalid, expectedCourse.TargetAudience, expectedCourse.Value)).WithMessage("Invalid CourseLoad");
         }
 
         [Theory]
@@ -84,10 +81,8 @@ namespace CursoOnline.DomainTest.Courses
             };
 
             //Assert
-            var message = Assert.Throws<ArgumentException>(() =>
-                 new Courses(expectedCourse.Name, expectedCourse.CourseLoad, expectedCourse.TargetAudience, valueInvalid)).Message;
-
-            Assert.Equal("Invalid Value", message);
+            Assert.Throws<ArgumentException>(() =>
+                 new Courses(expectedCourse.Name, expectedCourse.CourseLoad, expectedCourse.TargetAudience, valueInvalid)).WithMessage("Invalid Value");
         }
     }
 
