@@ -1,4 +1,5 @@
 ﻿using ExpectedObjects;
+using System;
 using Xunit;
 
 namespace CursoOnline.DomainTest.Courses
@@ -13,7 +14,7 @@ namespace CursoOnline.DomainTest.Courses
             {
                 Name = "English and Programming",
                 CourseLoad = (double)80,
-                TargetAudience = "Programmers",
+                TargetAudience = TargetAudience.Programmer,
                 Value = (double)895,
             };
 
@@ -24,20 +25,101 @@ namespace CursoOnline.DomainTest.Courses
             expectedCourse.ToExpectedObject().ShouldMatch(course);
         }
 
-        public class Courses
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void CourseNameMustNotBeInvalid(string nomeInvalido)
         {
-            public string Name { get; private set; }
-            public double CourseLoad { get; private set; }
-            public string TargetAudience { get; private set; }
-            public double Value { get; private set; }
-
-            public Courses(string name, double courseLoad, string targetAudience, double value)
+            //Arrange
+            var expectedCourse = new
             {
-                Name = name;
-                CourseLoad = courseLoad;
-                TargetAudience = targetAudience;
-                Value = value;
-            }
+                Name = "English and Programming",
+                CourseLoad = (double)80,
+                TargetAudience = TargetAudience.Programmer,
+                Value = (double)895,
+            };
+
+            //Assert
+            var message = Assert.Throws<ArgumentException>(() =>
+                new Courses(nomeInvalido, expectedCourse.CourseLoad, expectedCourse.TargetAudience, expectedCourse.Value)).Message;
+
+            Assert.Equal("Invalid Name", message);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        [InlineData(-564)]
+        public void CourseLoadMustNotBeLowerThanOne(double courseLoadInvalid)
+        {
+            //Arrange
+            var expectedCourse = new
+            {
+                Name = "English and Programming",
+                CourseLoad = (double)80,
+                TargetAudience = TargetAudience.Programmer,
+                Value = (double)895,
+            };
+
+            //Assert
+            var message = Assert.Throws<ArgumentException>(() =>
+                new Courses(expectedCourse.Name, courseLoadInvalid, expectedCourse.TargetAudience, expectedCourse.Value)).Message;
+
+            Assert.Equal("Invalid CourseLoad", message);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        [InlineData(-564)]
+        public void CourseValueMustNotBeLowerThanOne(double valueInvalid)
+        {
+            //Arrange
+            var expectedCourse = new
+            {
+                Name = "English and Programming",
+                CourseLoad = (double)80,
+                TargetAudience = TargetAudience.Programmer,
+                Value = (double)895,
+            };
+
+            //Assert
+            var message = Assert.Throws<ArgumentException>(() =>
+                 new Courses(expectedCourse.Name, expectedCourse.CourseLoad, expectedCourse.TargetAudience, valueInvalid)).Message;
+
+            Assert.Equal("Invalid Value", message);
+        }
+    }
+
+    public enum TargetAudience
+    {
+        Student,
+        Programmer,
+        Employee
+    }
+
+    public class Courses
+    {
+        public string Name { get; private set; }
+        public double CourseLoad { get; private set; }
+        public TargetAudience TargetAudience { get; private set; }
+        public double Value { get; private set; }
+
+        public Courses(string name, double courseLoad, TargetAudience targetAudience, double value)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Invalid Name");
+
+            if (courseLoad < 1)
+                throw new ArgumentException("Invalid CourseLoad");
+
+            if (value < 1)
+                throw new ArgumentException("Invalid Value");
+
+            Name = name;
+            CourseLoad = courseLoad;
+            TargetAudience = targetAudience;
+            Value = value;
         }
     }
 }
