@@ -3,7 +3,7 @@ using System;
 
 namespace CursoOnline.Domain.Entities
 {
-    public class Course
+    public class Course : Entity
     {
         public string Name { get; private set; }
         public string Description { get; private set; }

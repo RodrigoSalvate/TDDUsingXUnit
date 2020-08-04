@@ -1,10 +1,10 @@
 ﻿using CursoOnline.Domain.Entities;
+using CursoOnline.Domain.Interfaces.Base;
 
 namespace CursoOnline.Domain.Interfaces
 {
-    public interface ICourseRepository
+    public interface ICourseRepository : IRepository<Course>
     {
-        void Insert(Course course);
         Course GetByName(string name);
     }
 }
